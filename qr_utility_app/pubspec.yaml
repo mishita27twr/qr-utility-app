@@ -1,0 +1,33 @@
+name: qr_utility_app
+description: A Flutter QR Code Utility App
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.2.0
+  image_picker: ^1.0.7
+  shared_preferences: ^2.2.2
+  share_plus: ^7.2.0
+  url_launcher: ^6.2.5
+  path_provider: ^2.1.2
+  cupertino_icons: ^1.0.6
+  zxing2: ^0.2.3
+  image: ^4.1.7
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
