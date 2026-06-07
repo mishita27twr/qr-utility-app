@@ -1,6 +1,0 @@
-.vercel
-.env*.local
-.dart_tool/
-build/
-.flutter-plugins
-.flutter-plugins-dependencies
