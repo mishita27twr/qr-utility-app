@@ -59,6 +59,36 @@ With a clean user interface and responsive design, QR Utility App provides a sea
 - zxing2
 
 ---
+# Challenges Faced
+
+During the development of QR Utility App, several challenges were encountered:
+
+* Integrating QR code scanning functionality using the device camera.
+* Implementing image-based QR code scanning and handling different image formats.
+* Managing local storage for QR history using Shared Preferences.
+* Ensuring a smooth and responsive user interface across different screen sizes.
+* Handling URL validation and launching external links safely.
+* Configuring Flutter Web support and resolving deployment-related issues.
+
+These challenges provided valuable experience in Flutter development, state management, local storage, package integration, and deployment workflows.
+
+---
+
+# Future Enhancements
+
+The following features can be added in future versions of the application:
+
+* Export QR history as CSV or PDF.
+* Search and filter history records.
+* Mark frequently used QR codes as favorites.
+* Download generated QR codes as image files.
+* Cloud synchronization for accessing history across devices.
+* Dark/Light theme customization options.
+* QR code customization with colors and logos.
+* Analytics showing most frequently scanned or generated QR codes.
+* Multi-language support.
+* User authentication and profile management.
+
 
 ## Run Locally
 
