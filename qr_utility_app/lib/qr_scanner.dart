@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:zxing2/zxing2.dart';
 import 'package:zxing2/qrcode.dart';
+import 'history_service.dart';
 class QRScannerPage extends StatefulWidget {
   const QRScannerPage({super.key});
 
@@ -100,6 +101,10 @@ class _QRScannerPageState extends State<QRScannerPage>
       _isScanning = false;
       _copied = false;
     });
+    await HistoryService.addHistory(
+  "Scanned",
+  result.text,
+);
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -119,6 +124,10 @@ class _QRScannerPageState extends State<QRScannerPage>
           _scannedText = code;
           _isScanning = false;
         });
+        HistoryService.addHistory(
+  "Scanned",
+  code,
+);
       }
     }
   }

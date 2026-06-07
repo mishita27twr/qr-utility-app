@@ -4,6 +4,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'history_service.dart';
 
 class QRGeneratorPage extends StatefulWidget {
   const QRGeneratorPage({super.key});
@@ -17,12 +18,17 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
   String _generatedText = '';
   bool _copied = false;
 
-  void _generate() {
+  Future<void> _generate() async {
     final text = _controller.text.trim();
+
     if (text.isEmpty) return;
+
     setState(() {
       _generatedText = text;
     });
+
+    await HistoryService.addHistory("Generated", text);
+
     FocusScope.of(context).unfocus();
   }
 
@@ -36,10 +42,16 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
 
   Future<void> _copyText() async {
     if (_generatedText.isEmpty) return;
+
     await Clipboard.setData(ClipboardData(text: _generatedText));
+
     setState(() => _copied = true);
+
     await Future.delayed(const Duration(seconds: 2));
-    if (mounted) setState(() => _copied = false);
+
+    if (mounted) {
+      setState(() => _copied = false);
+    }
   }
 
   Future<void> _shareQR() async {
@@ -54,6 +66,7 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
 
       if (qrValidationResult.status == QrValidationStatus.valid) {
         final qrCode = qrValidationResult.qrCode!;
+
         final painter = QrPainter.withQr(
           qr: qrCode,
           color: const Color(0xFF000000),
@@ -61,27 +74,37 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
           gapless: true,
         );
 
-        final imageSize = 300.0;
+        const imageSize = 300.0;
+
         final recorder = ui.PictureRecorder();
         final canvas = Canvas(recorder);
-        painter.paint(canvas, Size(imageSize, imageSize));
+
+        painter.paint(canvas, const Size(imageSize, imageSize));
+
         final picture = recorder.endRecording();
+
         final image = await picture.toImage(
           imageSize.toInt(),
           imageSize.toInt(),
         );
+
         final byteData = await image.toByteData(
           format: ui.ImageByteFormat.png,
         );
 
         if (byteData != null) {
-          final bytes = byteData.buffer.asUint8List();
+          final Uint8List bytes = byteData.buffer.asUint8List();
+
           final xFile = XFile.fromData(
             bytes,
             mimeType: 'image/png',
             name: 'qrcode.png',
           );
-          await Share.shareXFiles([xFile], text: 'QR Code for: $_generatedText');
+
+          await Share.shareXFiles(
+            [xFile],
+            text: 'QR Code for: $_generatedText',
+          );
         }
       }
     } catch (e) {
@@ -109,7 +132,6 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Input card
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -125,6 +147,7 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
+
                   TextField(
                     controller: _controller,
                     maxLines: 4,
@@ -134,13 +157,18 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       filled: true,
-                      fillColor: colorScheme.surfaceContainerHighest
-                          .withOpacity(0.4),
+                      fillColor:
+                          colorScheme.surfaceContainerHighest.withOpacity(0.4),
                     ),
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _generate(),
+                    onChanged: (_) {
+                      setState(() {});
+                    },
                   ),
+
                   const SizedBox(height: 12),
+
                   Row(
                     children: [
                       Expanded(
@@ -158,6 +186,7 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                           ),
                         ),
                       ),
+
                       if (hasQR) ...[
                         const SizedBox(width: 10),
                         OutlinedButton.icon(
@@ -184,8 +213,7 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
 
           const SizedBox(height: 16),
 
-          // QR display
-          if (hasQR) ...[
+          if (hasQR)
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -211,13 +239,15 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                         errorCorrectionLevel: QrErrorCorrectLevel.H,
                       ),
                     ),
+
                     const SizedBox(height: 16),
+
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest
-                            .withOpacity(0.5),
+                        color:
+                            colorScheme.surfaceContainerHighest.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -245,7 +275,9 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                         ],
                       ),
                     ),
+
                     const SizedBox(height: 16),
+
                     Row(
                       children: [
                         Expanded(
@@ -270,8 +302,8 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                   ],
                 ),
               ),
-            ),
-          ] else ...[
+            )
+          else
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 48),
@@ -280,8 +312,8 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest
-                            .withOpacity(0.5),
+                        color:
+                            colorScheme.surfaceContainerHighest.withOpacity(0.5),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -303,7 +335,6 @@ class _QRGeneratorPageState extends State<QRGeneratorPage> {
                 ),
               ),
             ),
-          ],
         ],
       ),
     );
@@ -324,6 +355,7 @@ class _ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),

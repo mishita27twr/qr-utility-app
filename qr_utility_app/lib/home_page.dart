@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'qr_generator.dart';
 import 'qr_scanner.dart';
+import 'history_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = const [
     QRGeneratorPage(),
     QRScannerPage(),
+    HistoryScreen(),
   ];
 
   @override
@@ -54,10 +56,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: _pages[_currentIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
@@ -75,6 +74,11 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.qr_code_scanner_rounded),
             selectedIcon: Icon(Icons.qr_code_scanner_rounded),
             label: 'Scan',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.history_rounded),
+            selectedIcon: Icon(Icons.history_rounded),
+            label: 'History',
           ),
         ],
       ),
