@@ -9,6 +9,14 @@ A simple and modern Flutter web app to generate, scan, save, and manage QR codes
 </p>
 
 ---
+# About the App
+
+QR Utility App is a Flutter-based web application designed to make QR code generation and scanning simple and convenient. Users can instantly generate QR codes from text or URLs, scan QR codes using their device camera, and even extract QR information from uploaded images.
+
+The application also includes a History feature that automatically stores all generated and scanned QR codes, allowing users to revisit, manage, and delete previous entries whenever needed.
+
+With a clean user interface and responsive design, QR Utility App provides a seamless experience across different devices while offering essential QR code utilities in one place.
+
 
 ## Screenshots
 
